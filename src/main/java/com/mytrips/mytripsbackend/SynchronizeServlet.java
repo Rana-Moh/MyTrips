@@ -11,6 +11,7 @@ import com.mytrips.mytripsbackend.beans.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,7 +53,8 @@ public class SynchronizeServlet extends HttpServlet {
                 ArrayList<Trip> trips = new ArrayList<>();
                 
                 DatabaseHandler dbh = new DatabaseHandler();
-                boolean success = dbh.synchronize(trips);
+                boolean success = dbh.synchronize((ArrayList<Trip>) 
+                        Arrays.asList(tripsArr));
                 System.out.println("Sync Success: " + success);
 
                 response.setContentType("application/json"); 

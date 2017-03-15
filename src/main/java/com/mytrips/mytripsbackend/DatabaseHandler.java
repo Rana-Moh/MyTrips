@@ -91,8 +91,12 @@ public class DatabaseHandler {
 
     boolean synchronize(ArrayList<Trip> trips) {
         boolean success = false;
+        String query = "select * from trips where userId = " + trips.get(0).
+                getUserId();
         
-        
+        for (Trip trip : trips) {
+            
+        }
         
         return success;
     }  
