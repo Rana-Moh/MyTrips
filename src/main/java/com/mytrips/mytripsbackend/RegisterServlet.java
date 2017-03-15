@@ -39,18 +39,6 @@ public class RegisterServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             
             String jsonString = request.getParameter("json");
-            StringBuilder jb = new StringBuilder();
-            String line = null;
-            
-            try {
-                /*BufferedReader reader = request.getReader();
-                while ((line = reader.readLine()) != null)
-                    jb.append(line);*/
-                System.out.println("----Json: " + jsonString);
-            
-            } catch (Exception e) { 
-                e.printStackTrace();
-            }
 
             try {
                 //JSONObject tripJson =  new JSONObject(jb.toString());

@@ -40,24 +40,15 @@ public class SynchronizeServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         String jsonString = request.getParameter("json");
-        StringBuilder jb = new StringBuilder();
-        String line = null;
         
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            try {
-                /*BufferedReader reader = request.getReader();
-                while ((line = reader.readLine()) != null)
-                    jb.append(line);*/
-                System.out.println("----Json: " + jsonString);
-            
-            } catch (Exception e) { 
-                e.printStackTrace();
-            }
 
             try {
                 Gson gson = new Gson();
                 //parse json to arraylist of trips
+                Trip[] tripsArr = gson.fromJson(jsonString, Trip[].class);
+                System.out.println("-----Arr length: " + tripsArr.length);
                 ArrayList<Trip> trips = new ArrayList<>();
                 
                 DatabaseHandler dbh = new DatabaseHandler();

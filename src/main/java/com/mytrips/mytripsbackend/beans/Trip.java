@@ -5,6 +5,8 @@
  */
 package com.mytrips.mytripsbackend.beans;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author rocke
@@ -20,12 +22,12 @@ public class Trip {
     String endCoord;
     String date;
     String time;
-    String notes;       //temporarily a string with delimiters
     String status;
     int done;       //represented as int in db
+    String[] notes;
 
     public Trip(int id, int userId, String start, String startCoord, String end, String endCoord,
-                String date, String time, String notes, String status, int done) {
+                String date, String time, String status, int done, String[] notes) {
         this.id = id;
         this.userId = userId;
         this.start = start;
@@ -34,9 +36,9 @@ public class Trip {
         this.endCoord = endCoord;
         this.date = date;
         this.time = time;
-        this.notes = notes;
         this.status = status;
         this.done = done;
+        this.notes=notes;
     }
 
     public Trip() {
@@ -91,11 +93,11 @@ public class Trip {
         this.time = time;
     }
 
-    public String getNotes() {
+    public String[] getNotes() {
         return notes;
     }
 
-    public void setNotes(String notes) {
+    public void setNotes(String[] notes) {
         this.notes = notes;
     }
 

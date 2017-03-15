@@ -37,18 +37,19 @@ public class DatabaseHandler {
         }
     }
 
-    boolean login(String email, String password) {
-        boolean success = false;
+    User login(String email, String password) {
+        User user = null;
         
         try {
-            PreparedStatement pst = con.prepareStatement("select password from "
+            PreparedStatement pst = con.prepareStatement("select * from "
                     + "users where email = ?");
             pst.setString(1, email);
             ResultSet resultset = pst.executeQuery();
             
             if (resultset.next()) {
                 if(password.equalsIgnoreCase(resultset.getString("password"))){
-                    success = true;
+                    user = new User(resultset.getInt("id"),  resultset.getString("email"),
+                            resultset.getString("password"), resultset.getString("fullName"));
                 }
                 else{
                     System.out.println("Wrong Password!");
@@ -63,7 +64,7 @@ public class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return success;
+        return user;
     }
 
     boolean register(String email, String password, String fullName) {

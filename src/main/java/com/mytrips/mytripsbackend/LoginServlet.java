@@ -6,6 +6,8 @@ package com.mytrips.mytripsbackend;
  * and open the template in the editor.
  */
 
+import com.google.gson.Gson;
+import com.mytrips.mytripsbackend.beans.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,36 +39,27 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         
         String jsonString = request.getParameter("json");
-        StringBuilder jb = new StringBuilder();
-        String line = null;
         
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
-            try {
-                /*BufferedReader reader = request.getReader();
-                while ((line = reader.readLine()) != null)
-                    jb.append(line);*/
-                System.out.println("----Json: " + jsonString);
-            
-            } catch (Exception e) { 
-                e.printStackTrace();
-            }
 
             try {
                 //JSONObject tripJson =  new JSONObject(jb.toString());
                 JSONObject tripJson =  new JSONObject(jsonString);
                 String email = tripJson.getString("email");
                 String password = tripJson.getString("password");
-                System.out.println("-----Email: " + email + ", password: " + password);
                 
                 DatabaseHandler dbh = new DatabaseHandler();
-                boolean success = dbh.login(email, password);
-                System.out.println("Login Success: " + success);
-
-                response.setContentType("application/json"); 
-                out.print("{'success' : " + success + "}");
-                out.flush();
+                User user = dbh.login(email, password);
+                
+                if(user != null){
+                    response.setContentType("application/json"); 
+                    Gson gson = new Gson();
+                    String userJson = gson.toJson(user);
+                    System.out.println("-----userJson: " + userJson);
+                    out.print(userJson);
+                    out.flush();
+                }
                 
             } catch (JSONException e) {
                 e.printStackTrace();
