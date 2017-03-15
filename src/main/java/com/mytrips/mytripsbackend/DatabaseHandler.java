@@ -1,11 +1,14 @@
 package com.mytrips.mytripsbackend;
 
 
+import com.mytrips.mytripsbackend.beans.Trip;
+import com.mytrips.mytripsbackend.beans.User;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,5 +87,12 @@ public class DatabaseHandler {
         
         return success;
     }
-    
+
+    boolean synchronize(ArrayList<Trip> trips) {
+        boolean success = false;
+        
+        
+        
+        return success;
+    }  
 }
