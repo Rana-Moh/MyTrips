@@ -91,13 +91,50 @@ public class DatabaseHandler {
 
     boolean synchronize(ArrayList<Trip> trips) {
         boolean success = false;
-        String query = "select * from trips where userId = " + trips.get(0).
-                getUserId();
         
-        for (Trip trip : trips) {
+        try {
+            String query = "delete from trips where userId = " + trips.get(0).
+                    getUserId();
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.executeUpdate();
+            System.out.println("Deleted trips");
             
+            for (Trip trip : trips) {
+                insertTrip(trip);
+            }
+            
+            success = true;
+            pst.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return success;
-    }  
+    }
+    
+    public void insertTrip(Trip trip){
+        try {
+            //ignore notes for now
+            String query = "insert into trips(userId, start, startCoord, end,"
+                    + " endCoord, date, time, status, done) values (?,?,?,?,?,?,?,?,?);";
+            
+            try (PreparedStatement pst = con.prepareStatement(query)) {
+                pst.setInt(1, trip.getUserId());
+                pst.setString(2, trip.getStart());
+                pst.setString(3, trip.getStartCoord());
+                pst.setString(4, trip.getEnd());
+                pst.setString(5, trip.getEndCoord());
+                pst.setString(6, trip.getDate());
+                pst.setString(7, trip.getTime());
+                pst.setString(8, trip.getStatus());
+                pst.setInt(9, trip.isDone());
+                
+                pst.executeUpdate();
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

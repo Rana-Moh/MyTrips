@@ -6,17 +6,21 @@
 package com.mytrips.mytripsbackend;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mytrips.mytripsbackend.beans.Trip;
 import com.mytrips.mytripsbackend.beans.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,13 +52,15 @@ public class SynchronizeServlet extends HttpServlet {
             try {
                 Gson gson = new Gson();
                 //parse json to arraylist of trips
-                Trip[] tripsArr = gson.fromJson(jsonString, Trip[].class);
-                System.out.println("-----Arr length: " + tripsArr.length);
-                ArrayList<Trip> trips = new ArrayList<>();
+                ArrayList<Trip> trips;
+                Type type = new TypeToken<ArrayList<Trip>>(){}.getType();
+                trips = gson.fromJson(jsonString, type);
+                System.out.println("----jsonString: " + jsonString);
+                System.out.println("-----Arr length: " + trips.size());
+                System.out.println("-----Trip start: " + trips.get(0).getStart());
                 
                 DatabaseHandler dbh = new DatabaseHandler();
-                boolean success = dbh.synchronize((ArrayList<Trip>) 
-                        Arrays.asList(tripsArr));
+                boolean success = dbh.synchronize(trips);
                 System.out.println("Sync Success: " + success);
 
                 response.setContentType("application/json"); 
