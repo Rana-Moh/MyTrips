@@ -68,6 +68,8 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
+                    <warName>MyTripsBackend-1.0-SNAPSHOT</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
