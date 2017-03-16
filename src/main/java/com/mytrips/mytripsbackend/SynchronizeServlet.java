@@ -57,7 +57,6 @@ public class SynchronizeServlet extends HttpServlet {
                 trips = gson.fromJson(jsonString, type);
                 System.out.println("----jsonString: " + jsonString);
                 System.out.println("-----Arr length: " + trips.size());
-                System.out.println("-----Trip start: " + trips.get(0).getStart());
                 
                 DatabaseHandler dbh = new DatabaseHandler();
                 boolean success = dbh.synchronize(trips);
