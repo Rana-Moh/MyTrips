@@ -52,13 +52,15 @@ public class LoginServlet extends HttpServlet {
                 DatabaseHandler dbh = new DatabaseHandler();
                 User user = dbh.login(email, password);
                 
+                response.setContentType("application/json"); 
                 if(user != null){
-                    response.setContentType("application/json"); 
                     Gson gson = new Gson();
                     String userJson = gson.toJson(user);
-                    System.out.println("-----userJson: " + userJson);
                     out.print(userJson);
                     out.flush();
+                }
+                else{
+                    out.print("{}");
                 }
                 
             } catch (JSONException e) {
