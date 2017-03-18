@@ -40,9 +40,8 @@ public class DatabaseHandler {
     User login(String email, String password) {
         User user = null;
         
-        try {
-            PreparedStatement pst = con.prepareStatement("select * from "
-                    + "users where email = ?");
+        try (PreparedStatement pst = con.prepareStatement("select * from "
+                + "users where email = ?")) {
             pst.setString(1, email);
             ResultSet resultset = pst.executeQuery();
             
@@ -50,15 +49,15 @@ public class DatabaseHandler {
                 if(password.equalsIgnoreCase(resultset.getString("password"))){
                     user = new User(resultset.getInt("id"),  resultset.getString("email"),
                             resultset.getString("password"), resultset.getString("fullName"));
+                    System.out.println("Successful Login!");
                 }
                 else{
                     System.out.println("Wrong Password!");
                 }
             }
             else{
-                System.out.println("This email doesn't exist!");
+                System.out.println("This user doesn't exist!");
             }
-            pst.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,24 +68,51 @@ public class DatabaseHandler {
 
     boolean register(String email, String password, String fullName) {
         boolean success = false;
+        int affected;
         
         try {
-            PreparedStatement pst = con.prepareStatement("insert into users(email, "
-                    + "password, fullName) values (?, ?, ?)");
-            pst.setString(1, email);
-            pst.setString(2, password);
-            pst.setString(3, fullName);
-            int affected = pst.executeUpdate();
-            if(affected == 1)
-                success = true;
-            
-            pst.close();
+
+            if(!userExists(email)){
+                PreparedStatement pst = con.prepareStatement("insert into users(email, "
+                + "password, fullName) values (?, ?, ?)");
+                pst.setString(1, email);
+                pst.setString(2, password);
+                pst.setString(3, fullName);
+                
+                affected = pst.executeUpdate();
+                if(affected == 1)
+                    success = true;
+
+                pst.close();
+            }
             
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return success;
+    }
+    
+    public boolean userExists(String email){
+        boolean exists = false;
+        
+                try {            
+            PreparedStatement pst = con.prepareStatement("select email from "
+                    + "users where email = ?");
+            pst.setString(1, email);
+            ResultSet resultset = pst.executeQuery();
+            
+            if (resultset.next()) {
+                if(email.equals(resultset.getString("email"))){
+                    exists = true;
+                }
+            }
+            
+        }   catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
+        return exists;
     }
 
     boolean synchronize(ArrayList<Trip> trips) {
@@ -103,19 +129,20 @@ public class DatabaseHandler {
         return success;
     }
     
-    public boolean tripExists(int tripId, int userId){
+    public boolean tripExists(String tripId, int userId){
         boolean exists = false;
         
-        try {            
+        try {          
+        
             PreparedStatement pst = con.prepareStatement("select id from "
                     + "trips where id = ? and userId = ?");
-            pst.setInt(1, tripId);
+            pst.setString(1, tripId);
             pst.setInt(2, userId);
             ResultSet resultset = pst.executeQuery();
             
             //TODO: compare b tare2a tanya 3shan el id ta7t hayb2a 8er el id fo2
             if (resultset.next()) {
-                if(tripId == resultset.getInt("id")){
+                if(tripId.equals(resultset.getString("id"))){
                     exists = true;
                 }
             }
@@ -130,19 +157,20 @@ public class DatabaseHandler {
     public void insertTrip(Trip trip){
         try {
             //ignore notes for now
-            String query = "insert into trips(userId, start, startCoord, end,"
-                    + " endCoord, date, time, status, done) values (?,?,?,?,?,?,?,?,?);";
+            String query = "insert into trips(id, userId, start, startCoord, end,"
+                    + " endCoord, date, time, status, done) values (?,?,?,?,?,?,?,?,?,?);";
             
             try (PreparedStatement pst = con.prepareStatement(query)) {
-                pst.setInt(1, trip.getUserId());
-                pst.setString(2, trip.getStart());
-                pst.setString(3, trip.getStartCoord());
-                pst.setString(4, trip.getEnd());
-                pst.setString(5, trip.getEndCoord());
-                pst.setString(6, trip.getDate());
-                pst.setString(7, trip.getTime());
-                pst.setString(8, trip.getStatus());
-                pst.setInt(9, trip.isDone());
+                pst.setString(1, trip.getId());
+                pst.setInt(2, trip.getUserId());
+                pst.setString(3, trip.getStart());
+                pst.setString(4, trip.getStartCoord());
+                pst.setString(5, trip.getEnd());
+                pst.setString(6, trip.getEndCoord());
+                pst.setString(7, trip.getDate());
+                pst.setString(8, trip.getTime());
+                pst.setString(9, trip.getStatus());
+                pst.setInt(10, trip.isDone());
                 
                 pst.executeUpdate();
                 System.out.println("Trip inserted.");
@@ -167,12 +195,44 @@ public class DatabaseHandler {
             pst.setString(6, trip.getTime());
             pst.setString(7, trip.getStatus());
             pst.setInt(8, trip.isDone());
-            pst.setInt(9, trip.getId());
+            pst.setString(9, trip.getId());
             
             pst.executeUpdate();
             System.out.println("Trip updated.");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    ArrayList<Trip> getUserTrips(int userId) {
+        ArrayList<Trip> trips = new ArrayList<>();
+        
+        try (PreparedStatement pst = con.prepareStatement("select * from "
+                + "trips where userId = ?")) {
+            pst.setInt(1, userId);
+            ResultSet rs = pst.executeQuery();
+            
+            Trip trip;
+            while(rs.next()) {
+                trip = new Trip();
+                trip.setId(rs.getString("id"));
+                trip.setUserId(Integer.parseInt(rs.getString("userId")));
+                trip.setStart(rs.getString("start"));
+                trip.setStartCoord(rs.getString("startCoord"));
+                trip.setEnd(rs.getString("end"));
+                trip.setEndCoord(rs.getString("endCoord"));
+                trip.setDate(rs.getString("date"));
+                trip.setTime(rs.getString("time"));
+                trip.setStatus(rs.getString("status"));
+                trip.setDone(rs.getInt("done"));
+                
+                trips.add(trip);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return trips;
     }
 }
