@@ -5,6 +5,8 @@
  */
 package com.mytrips.mytripsbackend.beans;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author rocke
@@ -12,41 +14,54 @@ package com.mytrips.mytripsbackend.beans;
 
 public class Trip {
 
-    int id;
+    String id;
     int userId;
+    String name;
     String start;
-    String startCoord;
+    double startX;
+    double startY;
     String end;
-    String endCoord;
+    double endX;
+    double endY;
     String date;
     String time;
     String status;
     int done;       //represented as int in db
-    //String[] notes; //ignore notes for now
+    ArrayList<Note> notes; //ignore notes for now
+    String image;
+    String alarmId;
 
-    public Trip(int id, int userId, String start, String startCoord, String end, String endCoord,
-                String date, String time, String status, int done) {
+    public Trip(String id, int userId, String name, String start, double startX, 
+            double startY, String end, double endX, double endY, String date, 
+            String time, String status, int done, ArrayList<Note> notes, 
+            String image, String alarmId) {
         this.id = id;
         this.userId = userId;
+        this.name = name;
         this.start = start;
-        this.startCoord = startCoord;
+        this.startX = startX;
+        this.startY = startY;
         this.end = end;
-        this.endCoord = endCoord;
+        this.endX = endX;
+        this.endY = endY;
         this.date = date;
         this.time = time;
         this.status = status;
         this.done = done;
+        this.notes = notes;
+        this.image = image;
+        this.alarmId = alarmId;
     }
-
+ 
     public Trip() {
 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -58,6 +73,14 @@ public class Trip {
         this.userId = userId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getStart() {
         return start;
     }
@@ -66,12 +89,44 @@ public class Trip {
         this.start = start;
     }
 
+    public double getStartX() {
+        return startX;
+    }
+
+    public void setStartX(double startX) {
+        this.startX = startX;
+    }
+
+    public double getStartY() {
+        return startY;
+    }
+
+    public void setStartY(double startY) {
+        this.startY = startY;
+    }
+
     public String getEnd() {
         return end;
     }
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    public double getEndX() {
+        return endX;
+    }
+
+    public void setEndX(double endX) {
+        this.endX = endX;
+    }
+
+    public double getEndY() {
+        return endY;
+    }
+
+    public void setEndY(double endY) {
+        this.endY = endY;
     }
 
     public String getDate() {
@@ -98,7 +153,7 @@ public class Trip {
         this.status = status;
     }
 
-    public int isDone() {
+    public int getDone() {
         return done;
     }
 
@@ -106,20 +161,28 @@ public class Trip {
         this.done = done;
     }
 
-    public String getStartCoord() {
-        return startCoord;
+    public ArrayList<Note> getNotes() {
+        return notes;
     }
 
-    public void setStartCoord(String startCoord) {
-        this.startCoord = startCoord;
+    public void setNotes(ArrayList<Note> notes) {
+        this.notes = notes;
     }
 
-    public String getEndCoord() {
-        return endCoord;
+    public String getImage() {
+        return image;
     }
 
-    public void setEndCoord(String endCoord) {
-        this.endCoord = endCoord;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getAlarmId() {
+        return alarmId;
+    }
+
+    public void setAlarmId(String alarmId) {
+        this.alarmId = alarmId;
     }
 }
 
