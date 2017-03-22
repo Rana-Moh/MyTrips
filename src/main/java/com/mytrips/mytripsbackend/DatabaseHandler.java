@@ -185,7 +185,7 @@ public class DatabaseHandler {
                 pst.setString(12, trip.getStatus());
                 pst.setInt(13, trip.getDone());
                 pst.setString(14, trip.getImage());
-                pst.setInt(15, trip.getAlarmId());
+                pst.setString(15, trip.getAlarmId());
                 pst.setLong(16, trip.getMilliSeconds());
                 
                 ArrayList<Note> notes = trip.getNotes();
@@ -219,7 +219,7 @@ public class DatabaseHandler {
             pst.setString(10, trip.getStatus());
             pst.setInt(11, trip.getDone());
             pst.setString(12, trip.getImage());
-            pst.setInt(13, trip.getAlarmId());
+            pst.setString(13, trip.getAlarmId());
             pst.setString(14, trip.getId());
             pst.setLong(15, trip.getMilliSeconds());
             
@@ -256,7 +256,7 @@ public class DatabaseHandler {
                 ArrayList<Note> notes = getTripNotes(trip.getId());
                 trip.setNotes(notes);
                 trip.setImage(rs.getString("image"));
-                trip.setAlarmId(rs.getInt("alarmId"));
+                trip.setAlarmId(rs.getString("alarmId"));
                 trip.setMilliSeconds(rs.getLong("milliSeconds"));
                 
                 trips.add(trip);
