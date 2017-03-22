@@ -119,27 +119,28 @@ public class DatabaseHandler {
 
     boolean synchronize(ArrayList<Trip> trips) {
         boolean success = false;
- 
+
         for (Trip trip : trips) {
+            if (trip.getStatus().equals("deleted")) {
+                
+            }
             ArrayList<Note> notes = trip.getNotes();
-            
-            if(tripExists(trip.getId())){
+
+            if (tripExists(trip.getId())) {
                 updateTrip(trip);
-                for(int j = 0; j < notes.size(); j++){
-                    if(noteExists(notes.get(j).getId())){
+                for (int j = 0; j < notes.size(); j++) {
+                    if (noteExists(notes.get(j).getId())) {
                         updateNote(notes.get(j));
-                    }
-                    else{
+                    } else {
                         insertNote(notes.get(j));
                     }
                 }
-            }
-            else{
+            } else {
                 insertTrip(trip);
             }
+            success = true;
         }
 
-        success = true;
         return success;
     }
     
@@ -226,6 +227,10 @@ public class DatabaseHandler {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void deleteTrip(int tripId){
+        //PreparedStatement preparedStatement = con.prepareStatement("");
     }
 
     ArrayList<Trip> getUserTrips(int userId) {
