@@ -186,7 +186,7 @@ public class DatabaseHandler {
                 pst.setString(12, trip.getStatus());
                 pst.setInt(13, trip.getDone());
                 pst.setString(14, trip.getImage());
-                pst.setString(15, trip.getAlarmId());
+                pst.setInt(15, trip.getAlarmId());
                 
                 ArrayList<Note> notes = trip.getNotes();
                 for(int i = 0; i < notes.size(); i++){
@@ -219,7 +219,7 @@ public class DatabaseHandler {
             pst.setString(10, trip.getStatus());
             pst.setInt(11, trip.getDone());
             pst.setString(12, trip.getImage());
-            pst.setString(13, trip.getAlarmId());
+            pst.setInt(13, trip.getAlarmId());
             pst.setString(14, trip.getId());
             
             pst.executeUpdate();
@@ -259,7 +259,7 @@ public class DatabaseHandler {
                 ArrayList<Note> notes = getTripNotes(trip.getId());
                 trip.setNotes(notes);
                 trip.setImage(rs.getString("image"));
-                trip.setAlarmId("alarmId");
+                trip.setAlarmId(rs.getInt("alarmId"));
                 
                 trips.add(trip);
             }
