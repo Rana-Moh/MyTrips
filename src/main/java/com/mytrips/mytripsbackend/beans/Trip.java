@@ -29,13 +29,13 @@ public class Trip {
     int done;       //represented as int in db
     ArrayList<Note> notes; //ignore notes for now
     String image;
-    int alarmId;
+    String alarmId;
     long milliSeconds;
 
     public Trip(String id, int userId, String name, String start, double startX, 
             double startY, String end, double endX, double endY, String date, 
             String time, String status, int done, ArrayList<Note> notes, 
-            String image, int alarmId, long milliSeconds) {
+            String image, String alarmId, long milliSeconds) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -179,11 +179,11 @@ public class Trip {
         this.image = image;
     }
 
-    public int getAlarmId() {
+    public String getAlarmId() {
         return alarmId;
     }
 
-    public void setAlarmId(int alarmId) {
+    public void setAlarmId(String alarmId) {
         this.alarmId = alarmId;
     }
 
