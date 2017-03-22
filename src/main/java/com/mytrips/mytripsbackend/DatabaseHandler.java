@@ -168,7 +168,7 @@ public class DatabaseHandler {
     public void insertTrip(Trip trip){
         try {
             String query = "insert into trips(id, userId, name, start, startX, startY, end,"
-                    + " endX, endY, date, time, status, done, image, alarmId) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    + " endX, endY, date, time, status, done, image, alarmId, milliSeconds) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             
             try (PreparedStatement pst = con.prepareStatement(query)) {
                 pst.setString(1, trip.getId());
@@ -186,6 +186,7 @@ public class DatabaseHandler {
                 pst.setInt(13, trip.getDone());
                 pst.setString(14, trip.getImage());
                 pst.setInt(15, trip.getAlarmId());
+                pst.setLong(16, trip.getMilliSeconds());
                 
                 ArrayList<Note> notes = trip.getNotes();
                 for(int i = 0; i < notes.size(); i++){
@@ -203,7 +204,7 @@ public class DatabaseHandler {
     
     public void updateTrip(Trip trip){
         String query = "update trips set name = ?, start = ?, startX = ?, startY = ?, end = ?,"
-                + " endX = ?, endY = ?, date = ?, time = ?, status = ?, done = ?, image = ?, alarmId = ? where id = ?;";
+                + " endX = ?, endY = ?, date = ?, time = ?, status = ?, done = ?, image = ?, alarmId = ?, milliSeconds = ? where id = ?;";
 
         try (PreparedStatement pst = con.prepareStatement(query)) {
             pst.setString(1, trip.getName());
@@ -220,6 +221,7 @@ public class DatabaseHandler {
             pst.setString(12, trip.getImage());
             pst.setInt(13, trip.getAlarmId());
             pst.setString(14, trip.getId());
+            pst.setLong(15, trip.getMilliSeconds());
             
             pst.executeUpdate();
             System.out.println("Trip updated.");
@@ -255,6 +257,7 @@ public class DatabaseHandler {
                 trip.setNotes(notes);
                 trip.setImage(rs.getString("image"));
                 trip.setAlarmId(rs.getInt("alarmId"));
+                trip.setMilliSeconds(rs.getLong("milliSeconds"));
                 
                 trips.add(trip);
             }
