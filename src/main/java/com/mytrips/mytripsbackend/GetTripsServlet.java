@@ -38,15 +38,22 @@ public class GetTripsServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             int userId = Integer.parseInt(request.getParameter("userId"));
-            
+
             DatabaseHandler dbh = new DatabaseHandler();
             ArrayList<Trip> trips = dbh.getUserTrips(userId);
-            
+
             Gson gson = new Gson();
-            String jsonString = gson.toJson(trips);
-            System.out.println("----jsonString: " + jsonString);
+            String jsonString;
             
-            response.setContentType("application/json"); 
+            if (!trips.isEmpty()) {
+                jsonString = gson.toJson(trips);
+            } else {
+                jsonString = "{}";
+            }
+            
+            System.out.println("----jsonString: " + jsonString);
+
+            response.setContentType("application/json");
             out.print(jsonString);
             out.flush();
         }

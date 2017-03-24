@@ -121,22 +121,25 @@ public class DatabaseHandler {
         boolean success = false;
 
         for (Trip trip : trips) {
-            if (trip.getStatus().equals("deleted")) {
-                
-            }
             ArrayList<Note> notes = trip.getNotes();
 
             if (tripExists(trip.getId())) {
-                updateTrip(trip);
-                for (int j = 0; j < notes.size(); j++) {
-                    if (noteExists(notes.get(j).getId())) {
-                        updateNote(notes.get(j));
-                    } else {
-                        insertNote(notes.get(j));
+                if (trip.getStatus().equals("deleted")) {
+                    deleteTrip(trip.getId());
+                } else {
+                    updateTrip(trip);
+                    for (int j = 0; j < notes.size(); j++) {
+                        if (noteExists(notes.get(j).getId())) {
+                            updateNote(notes.get(j));
+                        } else {
+                            insertNote(notes.get(j));
+                        }
                     }
                 }
             } else {
-                insertTrip(trip);
+                if (!trip.getStatus().equals("deleted")) {
+                    insertTrip(trip);
+                }
             }
             success = true;
         }
@@ -166,11 +169,11 @@ public class DatabaseHandler {
         return exists;
     }
         
-    public void insertTrip(Trip trip){
+    public void insertTrip(Trip trip) {
         try {
             String query = "insert into trips(id, userId, name, start, startX, startY, end,"
                     + " endX, endY, date, time, status, done, image, alarmId, milliSeconds) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-            
+
             try (PreparedStatement pst = con.prepareStatement(query)) {
                 pst.setString(1, trip.getId());
                 pst.setInt(2, trip.getUserId());
@@ -188,22 +191,24 @@ public class DatabaseHandler {
                 pst.setString(14, trip.getImage());
                 pst.setInt(15, trip.getAlarmId());
                 pst.setLong(16, trip.getMilliSeconds());
-                
-                ArrayList<Note> notes = trip.getNotes();
-                for(int i = 0; i < notes.size(); i++){
-                    insertNote(notes.get(i));
-                }
-                
+
                 pst.executeUpdate();
+
+                ArrayList<Note> notes = trip.getNotes();
+                if (!notes.isEmpty()) {
+                    for (int i = 0; i < notes.size(); i++) {
+                        insertNote(notes.get(i));
+                    }
+                }
+
                 System.out.println("Trip inserted.");
             }
-            
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void updateTrip(Trip trip){
+    public void updateTrip(Trip trip) {
         String query = "update trips set name = ?, start = ?, startX = ?, startY = ?, end = ?,"
                 + " endX = ?, endY = ?, date = ?, time = ?, status = ?, done = ?, image = ?, alarmId = ?, milliSeconds = ? where id = ?;";
 
@@ -221,9 +226,9 @@ public class DatabaseHandler {
             pst.setInt(11, trip.getDone());
             pst.setString(12, trip.getImage());
             pst.setInt(13, trip.getAlarmId());
-            pst.setString(14, trip.getId());
-            pst.setLong(15, trip.getMilliSeconds());
-            
+            pst.setLong(14, trip.getMilliSeconds());
+            pst.setString(15, trip.getId());
+
             pst.executeUpdate();
             System.out.println("Trip updated.");
         } catch (SQLException ex) {
@@ -231,8 +236,14 @@ public class DatabaseHandler {
         }
     }
     
-    public void deleteTrip(int tripId){
-        //PreparedStatement preparedStatement = con.prepareStatement("");
+    public void deleteTrip(String tripId){
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement("DELETE FROM trips WHERE id = ?");
+            preparedStatement.setString(1, tripId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     ArrayList<Trip> getUserTrips(int userId) {
@@ -248,6 +259,7 @@ public class DatabaseHandler {
                 trip = new Trip();
                 trip.setId(rs.getString("id"));
                 trip.setUserId(Integer.parseInt(rs.getString("userId")));
+                trip.setName(rs.getString("name"));
                 trip.setStart(rs.getString("start"));
                 trip.setStartX(rs.getDouble("startX"));
                 trip.setStartY(rs.getDouble("startY"));

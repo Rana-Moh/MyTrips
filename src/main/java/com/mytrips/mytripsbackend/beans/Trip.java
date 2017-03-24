@@ -11,7 +11,6 @@ import java.util.ArrayList;
  *
  * @author rocke
  */
-
 public class Trip {
 
     String id;
@@ -29,12 +28,12 @@ public class Trip {
     int done;       //represented as int in db
     ArrayList<Note> notes; //ignore notes for now
     String image;
-    int alarmId;
     long milliSeconds;
+    int alarmId;
 
-    public Trip(String id, int userId, String name, String start, double startX, 
-            double startY, String end, double endX, double endY, String date, 
-            String time, String status, int done, ArrayList<Note> notes, 
+    public Trip(String id, int userId, String name, String start, double startX,
+            double startY, String end, double endX, double endY, String date,
+            String time, String status, int done, ArrayList<Note> notes,
             String image, int alarmId, long milliSeconds) {
         this.id = id;
         this.userId = userId;
@@ -54,7 +53,7 @@ public class Trip {
         this.alarmId = alarmId;
         this.milliSeconds = milliSeconds;
     }
- 
+
     public Trip() {
 
     }
@@ -179,14 +178,6 @@ public class Trip {
         this.image = image;
     }
 
-    public int getAlarmId() {
-        return alarmId;
-    }
-
-    public void setAlarmId(int alarmId) {
-        this.alarmId = alarmId;
-    }
-
     public long getMilliSeconds() {
         return milliSeconds;
     }
@@ -194,5 +185,12 @@ public class Trip {
     public void setMilliSeconds(long milliSeconds) {
         this.milliSeconds = milliSeconds;
     }
-}
 
+    public int getAlarmId() {
+        return alarmId;
+    }
+
+    public void setAlarmId(int alarmId) {
+        this.alarmId = alarmId;
+    }
+}
